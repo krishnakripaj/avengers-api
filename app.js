@@ -1,24 +1,76 @@
-const express = require('express');
+const express = require("express");
 const app = express(); // created an express application
 
+app.use(express.json()); // parse json objects
+
 app.listen(3000, () => {
-    console.log("Listening on Port 3000");
+  console.log("Listening on Port 3000");
 });
 
+let avengerArray = [
+  { id: 1, name: "Captain America" },
+  { id: 2, name: "Thor" },
+  { id: 3, name: "Black Widow" },
+];
+
 // Callback function here is called a route handler
-app.get('/', (req, res) => {
-    res.send('You have successfully connected to our API! Welcome');
+app.get("/", (req, res) => {
+  res.send("You have successfully connected to our API! Welcome");
 });
 
 // GET ALL
-app.get('/api/avengers', (req, res) => {
-    let avengers = ['Iron Man', 'Captain America', 'Black Widow', 'Thor'];
-    res.send(avengers);
+app.get("/api/avengers", (req, res) => {
+  res.send(avengerArray);
 });
 
 // GET with Params
-app.get('/api/avengers/:avengerId', (req, res) => {
-    //eg: localhost:3000/api/avengers/3?filterBy="avengerType"
-    let optionalParam = req.query.filterBy; // accessing optional parameter
-    res.send('You have requested for the Avenger Id ' + req.params.avengerId + ' and the optional parameters passed for filterBy is ' + optionalParam);
+// ==      comparing the value "2" == 2
+// ===     comparing the value and the data type "2" === 2
+app.get("/api/avengers/:avengerId", (req, res) => {
+  let avenger = avengerArray.find(a=>a.id == req.params.avengerId);
+  if (!avenger) {
+      return res.status(404).send("The given ID does not exist on our system");
+  }
+  res.status(200).send(avenger);
 });
+
+app.post("/api/avengers", (req, res) => {
+    //Validations
+    if (!req.body.avengerName) {
+        return res.status(400).send("Not all mandatory values are sent");
+    }
+
+    let newAvengerObj = {
+        id: avengerArray.length + 1,
+        name: req.body.avengerName
+    };
+    avengerArray.push(newAvengerObj);
+    res.send(newAvengerObj);
+})
+
+app.put('/api/avengers/:avengerId', (req, res) => {
+    let avenger = avengerArray.find(a=>a.id == req.params.avengerId);
+    if (!avenger) {
+        return res.status(404).send("The given ID does not exist on our system");
+    }
+
+    // validation
+    if (!req.body.avengerName) {
+        return res.status(400).send("Not all mandatory values are sent");
+    }
+
+    avenger.name = req.body.avengerName;
+    res.send(avenger);
+});
+
+app.delete('/api/avengers/:avengerId', (req, res) => {
+    let avenger = avengerArray.find(a=>a.id == req.params.avengerId);
+    if (!avenger) {
+        return res.status(404).send("The given ID does not exist on our system");
+    }
+
+    let indexOfAvenger = avengerArray.indexOf(avenger);
+    avengerArray.splice(indexOfAvenger, 1);
+
+    res.send(avenger);
+})
