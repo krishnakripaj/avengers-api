@@ -1,0 +1,22 @@
+{
+  "name": "avengers-api",
+  "version": "1.0.0",
+  "description": "Avengers API for 20.2 NIBM Web API Batch",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krishnakripaj/avengers-api.git"
+  },
+  "author": "Kripa Jayakumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krishnakripaj/avengers-api/issues"
+  },
+  "homepage": "https://github.com/krishnakripaj/avengers-api#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
